@@ -1,21 +1,10 @@
 package informixcdc
 
-import com.informix.jdbc.IfxConnection
-import com.informix.jdbc.IfxSmartBlob
-import com.informix.lang.IfxToJavaType
-import com.informix.lang.IfxTypes
-import com.informix.lang.IfxTypes.IFX_TYPE_BIGINT
-import com.informix.lang.IfxTypes.IFX_TYPE_BIGSERIAL
-import com.informix.lang.IfxTypes.IFX_TYPE_DATETIME
-import com.informix.lang.IfxTypes.IFX_TYPE_DECIMAL
-import com.informix.lang.IfxTypes.IFX_TYPE_INT8
-import com.informix.lang.IfxTypes.IFX_TYPE_INTERVAL
-import com.informix.lang.IfxTypes.IFX_TYPE_LVARCHAR
-import com.informix.lang.IfxTypes.IFX_TYPE_MONEY
-import com.informix.lang.IfxTypes.IFX_TYPE_NVCHAR
-import com.informix.lang.IfxTypes.IFX_TYPE_UDTFIXED
-import com.informix.lang.IfxTypes.IFX_TYPE_UDTVAR
-import com.informix.lang.IfxTypes.IFX_TYPE_VARCHAR
+import com.gbasedbt.jdbc.IfxConnection
+import com.gbasedbt.jdbc.IfxSmartBlob
+import com.gbasedbt.lang.*
+import com.gbasedbt.lang.IfxTypes
+import com.gbasedbt.lang.IfxTypes.*
 import informixcdc.RecordsMessage.Record.Record
 import informixcdc.RecordsMessage.Record.Record.RowImage.AfterUpdate
 import informixcdc.RecordsMessage.Record.Record.RowImage.BeforeUpdate
@@ -582,7 +571,8 @@ private fun decoderForType(type: Int, name: String?, length: Int): (ByteArray) -
             // First byte is length.
             when {
                 Pair(raw[0], raw[1]) == Pair(1.toByte(), 0.toByte()) -> null
-                else -> IfxToJavaType.IfxToJavaChar(raw, 1, raw.count() - 1, null, false)
+                //else -> IfxToJavaType.IfxToJavaChar(raw, 1, raw.count() - 1, null, false)
+                else->{}
             }
         }
         IFX_TYPE_UDTVAR -> when (name) {
@@ -590,7 +580,8 @@ private fun decoderForType(type: Int, name: String?, length: Int): (ByteArray) -
                 when {
                     Pair(raw[1], raw[2]) == Pair(1.toByte(), 1.toByte()) -> null
                     // First bytes: [0, length, 0]
-                    else -> IfxToJavaType.IfxToJavaChar(raw, 3, raw.count() - 3, null, false)
+                   // else -> IfxToJavaType.IfxToJavaChar(raw, 3, raw.count() - 3, null, false)
+                    else->{}
                 }
             }
             else ->

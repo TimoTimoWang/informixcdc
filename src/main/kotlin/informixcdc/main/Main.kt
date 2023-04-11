@@ -62,7 +62,7 @@ fun main() {
     Records(
         getConn = ::getConn,
         server = config.informix.serverName,
-        fromSeq = 10,
+        fromSeq = 0,
         tables = listOf(TableDescription("aaa","dp_test","dp_test")),
         logFunc = ::log
     ).use { records ->

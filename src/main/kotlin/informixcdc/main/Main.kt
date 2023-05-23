@@ -32,11 +32,11 @@ object config {
 //        System.getenv("INFORMIXCDC_REQUEST").let { klaxon.parse<RecordsRequest>(it) }!!
 //dbc:gbasedbt-sqli://82.157.25.145:9088/sysmaster:DB_LOCALE=zh_CN.57372;CLIENT_LOCALE=zh_CN.57372;
     object informix {
-        val host = "82.157.25.145"
-        val port = 9088
+        val host = "****"
+        val port = 1111
         val serverName = "gbaseserver"
-        val user = "dp_test"
-        val password = "Datapipeline123"
+        val user = "****"
+        val password = "*****"
     }
 
 //    val log = System.getenv("HENCELOG_FROM").let {

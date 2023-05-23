@@ -30,7 +30,7 @@ object config {
         System.getenv()["INFORMIXCDC_HEARTBEAT_INTERVAL"]?.let { Duration.parse(it) } ?: Duration.ofSeconds(5)
 //    val request =
 //        System.getenv("INFORMIXCDC_REQUEST").let { klaxon.parse<RecordsRequest>(it) }!!
-//dbc:gbasedbt-sqli://82.157.25.145:9088/sysmaster:DB_LOCALE=zh_CN.57372;CLIENT_LOCALE=zh_CN.57372;
+//dbc:gbasedbt-sqli://****:9088/sysmaster:DB_LOCALE=zh_CN.57372;CLIENT_LOCALE=zh_CN.57372;
     object informix {
         val host = "****"
         val port = 1111

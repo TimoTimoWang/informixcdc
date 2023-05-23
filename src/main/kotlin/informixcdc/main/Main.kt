@@ -62,8 +62,8 @@ fun main() {
     Records(
         getConn = ::getConn,
         server = config.informix.serverName,
-        fromSeq = 0,
-        tables = listOf(TableDescription("aaa","dp_test","dp_test")),
+        fromSeq = 47311429656,
+        tables = listOf(TableDescription("aaa","dp_test","dp_test"),TableDescription("cccc","dp_test","dp_test")),
         logFunc = ::log
     ).use { records ->
         for (message in records.iterator().withHeartbeats(heartbeatInterval)) {

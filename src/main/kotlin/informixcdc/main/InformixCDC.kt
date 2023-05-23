@@ -64,7 +64,7 @@ class Records(
     private val server: String,
     private val tables: List<TableDescription>,
     private val fromSeq: Long? = null,
-    private val readTimeout: Duration? = Duration.ofMillis(1 * 1000),
+    private val readTimeout: Duration? = Duration.ofMillis(1 * 10000),
     private val maxRecords: Long = 100,
     logFunc: (Array<out Pair<String, Any?>>) -> Unit = {}
 ) {
@@ -156,6 +156,11 @@ class Records(
                     "execute" to "cdc_closesess",
                     "sessionID" to sessionID
                 ) {
+                    conn.getCDCResult("execute function informix.cdc_endcapture(?,?,?);") {
+                        setLong(1, sessionID)
+                        setLong(2, 0L)
+                        setString(3, "dp_test:dp_test.fff")
+                    }
                     conn.getCDCResult("EXECUTE FUNCTION cdc_closesess(?);") {
                         setLong(1, sessionID)
                     }
@@ -378,10 +383,12 @@ private class RecordsIterable(
         while (true) {
             try {
                 while (true) {
+                    //从bytesIter 中 get 的时候会自动触发  新一轮的获取数据
                     next(bytesIter)?.let { yield(it) }
                 }
             } catch (_: CDCTimeout) {
                 // Just reset iterator.
+                print("1111111")
                 bytesIter = bytes.iterator()
             }
         }
@@ -449,7 +456,7 @@ private fun RecordsIterable.next(bytes: Iterator<Byte>): Record? {
             val orderedColumns =
                 bytes
                     .take(payloadSize)
-                    .toString(Charset.forName("UTF-8"))
+                        .toString(Charset.forName("UTF-8"))
                     .split(", ")
                     .map { it.split(" ", limit = 1)[0] } // That should be the name
             val fixedOrdered = orderedColumns.take(numFixed)
@@ -571,8 +578,7 @@ private fun decoderForType(type: Int, name: String?, length: Int): (ByteArray) -
             // First byte is length.
             when {
                 Pair(raw[0], raw[1]) == Pair(1.toByte(), 0.toByte()) -> null
-                //else -> IfxToJavaType.IfxToJavaChar(raw, 1, raw.count() - 1, null, false)
-                else->{}
+                else -> IfxToJavaType().IfxToJavaChar(raw, 1, raw.count() - 1, null, false)
             }
         }
         IFX_TYPE_UDTVAR -> when (name) {
@@ -580,8 +586,8 @@ private fun decoderForType(type: Int, name: String?, length: Int): (ByteArray) -
                 when {
                     Pair(raw[1], raw[2]) == Pair(1.toByte(), 1.toByte()) -> null
                     // First bytes: [0, length, 0]
-                   // else -> IfxToJavaType.IfxToJavaChar(raw, 3, raw.count() - 3, null, false)
-                    else->{}
+                    else -> IfxToJavaType().IfxToJavaChar(raw, 3, raw.count() - 3, null, false)
+                   // else->{}
                 }
             }
             else ->
